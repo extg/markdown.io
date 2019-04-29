@@ -1,8 +1,9 @@
 {
-  "name": "lab5",
+  "name": "markdown.io",
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "start": "nodemon --exec \"vue-cli-service serve\"",
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "test:unit": "vue-cli-service test:unit"
