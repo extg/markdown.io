@@ -3,18 +3,47 @@
 const express = require('express')
 const router = express.Router()
 
-// middleware that is specific to this router
-router.use(function timeLog (req, res, next) {
-  console.log('Time: ', Date.now())
-  next()
+const Note = require('./models/Note')
+
+router.get('/notes', function(req, res, next) {
+  Note.find((err, result) => res.json(err || result))
 })
-// define the home page route
-router.get('/', function (req, res) {
-  res.send('Birds home page')
+
+router.get('/notes/:id', function(req, res, next) {
+  const { id } = req.params
+
+  Note.findOne(
+    { id },
+    (err, result) => console.log(result) || res.json(err || result)
+  )
 })
-// define the about route
-router.get('/about', function (req, res) {
-  res.send('About birds')
+
+router.post('/notes', function(req, res, next) {
+  const newNote = new Note({
+    id: String(
+      Math.random()
+        .toString(36)
+        .substring(2, 7)
+    ),
+    note: ''
+  })
+  newNote
+    .save()
+    .then(result => console.log(result) || res.json(result))
+    .catch(res.json)
+})
+
+router.put('/notes/:id', function(req, res, next) {
+  const { id } = req.params
+  const { note } = req.body
+  Note.updateOne({ id }, { note }, null, (err, result) =>
+    res.json(err || result)
+  )
+})
+
+router.delete('/notes/:id', function(req, res, next) {
+  const { id } = req.params
+  Note.deleteOne({ id }, (err, result) => res.json(err || result))
 })
 
 module.exports = router
